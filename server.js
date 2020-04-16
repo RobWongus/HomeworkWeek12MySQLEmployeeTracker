@@ -28,23 +28,23 @@ connection.connect(function(error) {
 //    res.status(200).send("YERRR!") 
 // });
 
-//Server Activation
+// Server Activation
 // app.listen(PORT, function() {
 //     console.log("Server listening on: http://localhost:" + PORT);
 // });
 
 function start() {
     inquirer.prompt({
-        name: choice,
-        type: list,
+        name: "choice",
+        type: "list",
         message: "Make a choice.",
-        choices: [
+        choice: [
             "view department",
             "view roles",
             "view employees",
             "add department",
             "add roles",
-            "add employee"
+            "add employee",
             "Quit"
         ]
     })
@@ -81,9 +81,47 @@ function start() {
 
 function viewDepartment() {
     let query = "SELECT *FROM department";
-    connection.query("SELECT * FROM department WHERE list=?" function (error, response) {
+    connection.query("SELECT * FROM department WHERE list=?", function (error, response) {
         if (error) {
             throw error;
+            start()
         }
     })
 }
+
+function viewEmployee() {
+    let query = "SELECT * FROM roles employee";
+    connection.query("SELECT * FROM role WHERE list=?", function (error, response) {
+        if (error) {
+            throw error;
+            start()
+        }
+    })
+}
+
+function viewRole() {
+    let query = "SELECT * FROM roles";
+    connection.query("SELECT * FROM role WHERE list=?", function (error, response) {
+        if (error) {
+            throw error;
+            start();
+        }
+    })
+}
+
+function addDepartment() {
+    start();
+}
+
+function addEmployee() {
+    start()
+}
+function addRole() {
+    start();
+}
+
+
+// Server Activation
+// app.listen(PORT, function() {
+//     console.log("Server listening on: http://localhost:" + PORT);
+// });
