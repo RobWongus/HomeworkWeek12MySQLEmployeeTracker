@@ -30,5 +30,13 @@ FOREIGN KEY (role_id) REFERENCES role(id),
 PRIMARY KEY (id)
 );
 
+-- SELECT * FROM department;
+-- SELECT * FROM employee;
 
+SELECT r.title, e.role_id, e.first_name, e.last_name
+FROM employee e 
+INNER JOIN role r ON e.role_id = r.id;
+
+-- select * from role;
+-- select * from employee;
 
