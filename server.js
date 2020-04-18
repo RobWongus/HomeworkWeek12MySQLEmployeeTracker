@@ -110,11 +110,53 @@ function viewRole() {
 }
 
 function addDepartment() {
+    inquirer
+        .prompt({
+            name: "artist",
+            type: "input",
+            message: "Department Name?"
+        })
+        .then(function(answer) {
+            var query = "SELECT employee.first_name. employee.last_name, employee.role_id, employee.manager_id, role.title, role.salary, role.department_id, department.name";
+            connection.query("INSERT INTO department(name) VALUES(?)", [answer.name_department], function(error, response){
+                if(error) throw error;
+            })
+        })
     start();
 }
 
 function addEmployee() {
-    start()
+    let roles = [];
+    let query = "SELECT * FROM employee_role";
+    connection.query(query,function(error, response) {
+        for(let i=0; i < response.length; i++) {
+            roles.push(response[i].name);
+        }
+    }) 
+    inquirer.prompt([{
+       name: "first_name",
+       type: "input",
+       message: "enter first name."
+    }, 
+        
+     { 
+       name: "last_name",
+       type: "input",
+       message: "enter last name."
+    },
+    
+    {
+       name: "role_id",
+       type: "list",
+       message: "choose your role.",
+       choices: roles
+    },
+        
+    ])
+    .then(function(answer){
+        console.log(answer)
+    })
+    start();
 }
 function addRole() {
     start();
