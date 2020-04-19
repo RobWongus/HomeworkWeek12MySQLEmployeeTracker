@@ -5,12 +5,12 @@ const consoleTable = require("console.table");
 const mysql = require("mysql");
 
 
-const PORT = process.env.PORT || "8817";
+const PORT = process.env.PORT || "3306";
 
 //mysql connection
 const connection = mysql.createConnection({
     host: "localhost",
-    port: 8817,
+    port: 3306,
     user: "root",
     password: "ScottSummers2!",
     database: "employee_tracker_db"
@@ -32,6 +32,8 @@ connection.connect(function(error) {
 // app.listen(PORT, function() {
 //     console.log("Server listening on: http://localhost:" + PORT);
 // });
+
+console.table
 
 function start() {
     inquirer.prompt({
