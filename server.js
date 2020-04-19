@@ -71,69 +71,81 @@ function start() {
       addDepartment();
       break;
 
-    case "add role":
+    case "add roles":
       addRole();
       break;
     
     case "add employee":
       addEmployee();
       break;
+      
+      default:
+        console.log("Laters!");
+        connection.end();
     }
+
   });
 }
 
 function viewDepartment() {
-    let query = "SELECT * FROM department ?";
+    let query = "SELECT * FROM department";
     connection.query(query, function (error, response) {
         if (error) {
             throw error;
-            start();
         }
+        console.table(response)
+        start();
     })
 }
 
 function viewEmployee() {
-    let query = "SELECT * FROM roles employee";
+    let query = "SELECT * FROM employee";
     connection.query(query, function (error, response) {
         if (error) {
             throw error;
-            start()
+            
         }
+        console.table(response)
+        start();
     })
 }
 
-function viewRole() {
-    let query = "SELECT * FROM roles";
+function viewRoles() {
+    let query = "SELECT * FROM role";
     connection.query(query, function (error, response) {
         if (error) {
             throw error;
-            start();
+            
         }
+        console.table(response)
+        start();
     })
 }
 
 function addDepartment() {
     inquirer
         .prompt({
-            name: "artist",
+            name: "name",
             type: "input",
             message: "Department Name?"
         })
         .then(function(answer) {
-            let query = "SELECT employee.first_name. employee.last_name, employee.role_id, employee.manager_id, role.title, role.salary, role.department_id, department.name";
-            connection.query("INSERT INTO department(name) VALUES(?)", [answer.name_department], function(error, response){
+           
+            connection.query("INSERT INTO department(name) VALUES(?)", [answer.name], function(error, response){
                 if(error) throw error;
             })
+            console.log("department added");
+            start();
         })
-    start();
+
 }
 
 function addEmployee() {
     let roles = [];
-    let query = "SELECT * FROM employee_role";
+    let query = "SELECT * FROM role";
     connection.query(query,function(error, response) {
         for(let i=0; i < response.length; i++) {
-            roles.push(response[i].name);
+            roles.push(response[i].title);
         }
     }) 
     inquirer.prompt([{
@@ -160,16 +172,16 @@ function addEmployee() {
         let roleId
         for(let i = 0; i < roles.length; i++) {
             if (roles[i] === answer.role_id){
-                roleId = i +1;
+                roleId = i + 1;
             }
         }
         let query = "INSERT INTO employee(first_name, Last_name, role_id) VALUES(?, ?, ?)";
-        connection.query(query, [answer.first_name, answer.last_name, roleID], function(error, response) {
+        connection.query(query, [answer.first_name, answer.last_name, roleId], function(error, response) {
             if (error) throw error;
-            console.log("new employee added!");
-            start();
+            
         })
-        
+        console.log("new employee added!");
+        start();
     })
 }
 function addRole() {
@@ -198,13 +210,13 @@ function addRole() {
     ])
     .then(function(answer) {
         let departmentID;
-    for(let i =0; i < currentDepartment.length; i++){
-        if(currentDepartment[i] === answer.department_list){
+    for(let i = 0; i < currentDepartment.length; i++){
+        if(currentDepartment[i] === answer.department_list) {
             departmentID = i + 1
         }
     };
 
-    let query = "INSERT INTO employee_role(title, salary, department_id) VALUES(?, ?, ?)";
+    let query = "INSERT INTO role(title, salary, department_id) VALUES(?, ?, ?)";
     connection.query(query, [answer.role_name, answer.role_salary, departmentID], function(error, response){
         if (error) throw error;
         console.log("new role added");
