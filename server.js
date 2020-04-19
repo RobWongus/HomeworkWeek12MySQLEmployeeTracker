@@ -1,11 +1,11 @@
 //App variables
-const express = require("express");
+// const express = require("express");
 const inquirer = require("inquirer");
 const consoleTable = require("console.table");
 const mysql = require("mysql");
 
 
-const PORT = process.env.PORT || "3306";
+const PORT = process.env.PORT || "8817";
 
 //mysql connection
 const connection = mysql.createConnection({
@@ -156,16 +156,57 @@ function addEmployee() {
         
     ])
     .then(function(answer){
-        console.log(answer)
+        let roleId
+        for(let i = 0; i < roles.length; i++) {
+            if (roles[i] === answer.role_id){
+                roleId = i +1;
+            }
+        }
+        let query = "INSERT INTO employee(first_name, Last_name, role_id) VALUES(?, ?, ?)";
+        connection.query(query, [answer.first_name, answer.last_name, roleID], function(error, response) {
+            if (error) throw error;
+            console.log("new employee added!");
+            start();
+        })
+        
     })
-    start();
 }
 function addRole() {
-    start();
-}
+    currentDepartment =[];
+    let query = "SELECT * FROM department";
+    connection.query(query, function(error, response) {
+        for(let i = 0; i <response.length; i++) {
+            currentDepartment.push(response[i].name);
+        };
+    inquirer.prompt([{
+        type: "input",
+        name: "role_name",
+        message: "new role name."
+    },
+    {
+        type: "input",
+        name: "role_salary",
+        message: "enter salary."
+    },
+    {
+        type: "list",
+        name: "department_list",
+        message: "choose department",
+        choices: currentDepartment
+    },
+    ])
+    .then(function(answer) {
+        let departmentID;
+    for(let i =0; i < currentDepartment.length; i++){
+        if(currentDepartment[i] === answer.department_list){
+            departmentID = i + 1
+        }
+    };
 
-
-// Server Activation
-// app.listen(PORT, function() {
-//     console.log("Server listening on: http://localhost:" + PORT);
-// });
+    let query = "INSERT INTO employee_role(title, salary, department_id) VALUES(?, ?, ?)";
+    connection.query(query, [answer.role_name, answer.role_salary, departmentID], function(error, response){
+        if (error) throw error;
+        console.log("new role added");
+        start();
+    })
+});   
