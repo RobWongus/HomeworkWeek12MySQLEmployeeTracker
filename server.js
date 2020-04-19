@@ -208,5 +208,7 @@ function addRole() {
         if (error) throw error;
         console.log("new role added");
         start();
-    })
-});   
+        });
+    });
+    });   
+}
