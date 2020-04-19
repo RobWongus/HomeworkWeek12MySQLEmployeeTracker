@@ -3,6 +3,7 @@
 const inquirer = require("inquirer");
 const consoleTable = require("console.table");
 const mysql = require("mysql");
+//const db = require("../db/db");
 
 
 const PORT = process.env.PORT || "8817";
@@ -39,8 +40,8 @@ function start() {
     inquirer.prompt({
         name: "choice",
         type: "list",
-        message: "Make a choice.",
-        choice: [
+        message: "make your choices.",
+        choices: [
             "view department",
             "view roles",
             "view employees",
@@ -82,18 +83,18 @@ function start() {
 }
 
 function viewDepartment() {
-    let query = "SELECT *FROM department";
-    connection.query("SELECT * FROM department WHERE list=?", function (error, response) {
+    let query = "SELECT * FROM department ?";
+    connection.query(query, function (error, response) {
         if (error) {
             throw error;
-            start()
+            start();
         }
     })
 }
 
 function viewEmployee() {
     let query = "SELECT * FROM roles employee";
-    connection.query("SELECT * FROM role WHERE list=?", function (error, response) {
+    connection.query(query, function (error, response) {
         if (error) {
             throw error;
             start()
@@ -103,7 +104,7 @@ function viewEmployee() {
 
 function viewRole() {
     let query = "SELECT * FROM roles";
-    connection.query("SELECT * FROM role WHERE list=?", function (error, response) {
+    connection.query(query, function (error, response) {
         if (error) {
             throw error;
             start();
@@ -119,7 +120,7 @@ function addDepartment() {
             message: "Department Name?"
         })
         .then(function(answer) {
-            var query = "SELECT employee.first_name. employee.last_name, employee.role_id, employee.manager_id, role.title, role.salary, role.department_id, department.name";
+            let query = "SELECT employee.first_name. employee.last_name, employee.role_id, employee.manager_id, role.title, role.salary, role.department_id, department.name";
             connection.query("INSERT INTO department(name) VALUES(?)", [answer.name_department], function(error, response){
                 if(error) throw error;
             })
@@ -211,4 +212,7 @@ function addRole() {
         });
     });
     });   
+}
+module.exports = {
+    start : start()
 }
