@@ -191,6 +191,7 @@ function addRole() {
         for(let i = 0; i <response.length; i++) {
             currentDepartment.push(response[i].name);
         };
+        console.log(currentDepartment);
     inquirer.prompt([{
         type: "input",
         name: "role_name",
@@ -224,6 +225,63 @@ function addRole() {
         });
     });
     });   
+}
+///////////////////////////////////////////////////////////////////////////
+function updateRole(){
+    let query = "SELECT * FROM employees";
+    connection.query(query, function(err, res){
+        if (err) throw err;
+        let currentEmployees = res.map(function(names){
+            return `${names.first_name} ${names.last_name}` 
+        });
+        let query2 = "SELECT * FROM employee_role";
+        let currentRoles2 = [];
+        connection.query(query2, function(err, res){
+            if (err) throw err;
+            for(let i=0; i < res.length; i++){
+                currentRoles2.push(res[i].title)
+            };
+        
+        inquirer.prompt([{
+            type: "list",
+            name: "employee_names",
+            message: "Please select the employee you would like to update.",
+            choices: currentEmployees
+        },{
+            type: "list",
+            name: "update_role",
+            message: "What is the new role?",
+            choices: currentRoles2
+        },
+        ]).then(function(answer){
+            //create comparison variable for role ID
+            let id;
+            for(let i=0; i< currentEmployees.length; i++){
+                if(currentEmployees[i] === answer.employee_names){
+                    console.log(id);
+                    id = i + 1;
+                    break;
+                };
+            };
+            // create role variable
+            let roleID2;
+            for(let i =0; i < currentRoles2.length; i++){
+                if(currentRoles2[i] === answer.update_role){
+                    roleID2 = i + 1;
+                    break;
+                };
+            };
+
+            console.log(roleID2, id);
+            let query3 = "UPDATE employees SET role_id = ? WHERE id = ?"
+            connection.query(query3, [roleID2, id], function(err, res){
+                if(err) throw err;
+                console.log("The role has been succesfully updated...");
+                start();
+            });
+        });
+    });
+    });
 }
 module.exports = {
     start : start()
