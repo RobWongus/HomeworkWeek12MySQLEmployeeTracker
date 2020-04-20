@@ -1,12 +1,12 @@
 //App variables
-// const express = require("express");
+// const expresponses = require("expresponses");
 const inquirer = require("inquirer");
 const consoleTable = require("console.table");
 const mysql = require("mysql");
-//const db = require("../db/db");
+const updateEmployees = require("./js/functions");
 
 
-const PORT = process.env.PORT || "8817";
+const PORT = process.env.PORT || "3306";
 
 //mysql connection
 const connection = mysql.createConnection({
@@ -25,8 +25,8 @@ connection.connect(function(error) {
 })
 
 //Routes Definitions
-// app.get("/", (req, res) => {
-//    res.status(200).send("YERRR!") 
+// app.get("/", (req, response) => {
+//    response.status(200).send("YerrorR!") 
 // });
 
 // Server Activation
@@ -226,26 +226,27 @@ function addRole() {
     });
     });   
 }
-///////////////////////////////////////////////////////////////////////////
-function updateRole(){
-    let query = "SELECT * FROM employees";
-    connection.query(query, function(err, res){
-        if (err) throw err;
-        let currentEmployees = res.map(function(names){
+
+function updateRole() {
+    let query = "SELECT * FROM employee";
+    connection.query(query, function(error, response){
+        if (error) throw error;
+        let currentEmployees = response.map(function(names){
             return `${names.first_name} ${names.last_name}` 
         });
-        let query2 = "SELECT * FROM employee_role";
+        
+        let query2 = "SELECT * FROM employee";
         let currentRoles2 = [];
-        connection.query(query2, function(err, res){
-            if (err) throw err;
-            for(let i=0; i < res.length; i++){
-                currentRoles2.push(res[i].title)
+        connection.query(query2, function(error, response){
+            if (error) throw error;
+            for(let i=0; i < response.length; i++){
+                currentRoles2.push(response[i].title)
             };
         
         inquirer.prompt([{
             type: "list",
             name: "employee_names",
-            message: "Please select the employee you would like to update.",
+            message: "Select employee you would like to update.",
             choices: currentEmployees
         },{
             type: "list",
@@ -254,7 +255,7 @@ function updateRole(){
             choices: currentRoles2
         },
         ]).then(function(answer){
-            //create comparison variable for role ID
+            //make a comparison variable for role ID
             let id;
             for(let i=0; i< currentEmployees.length; i++){
                 if(currentEmployees[i] === answer.employee_names){
@@ -263,7 +264,7 @@ function updateRole(){
                     break;
                 };
             };
-            // create role variable
+            // create a role variable
             let roleID2;
             for(let i =0; i < currentRoles2.length; i++){
                 if(currentRoles2[i] === answer.update_role){
@@ -274,15 +275,16 @@ function updateRole(){
 
             console.log(roleID2, id);
             let query3 = "UPDATE employees SET role_id = ? WHERE id = ?"
-            connection.query(query3, [roleID2, id], function(err, res){
-                if(err) throw err;
-                console.log("The role has been succesfully updated...");
+            connection.query(query3, [roleID2, id], function(error, response){
+                if(error) throw error;
+                console.log("The role has been updated.");
                 start();
             });
         });
     });
     });
 }
+
 module.exports = {
     start : start()
 }
