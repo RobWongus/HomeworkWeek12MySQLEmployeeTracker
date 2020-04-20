@@ -48,6 +48,7 @@ function start() {
             "add department",
             "add roles",
             "add employee",
+            "update employee",
             "Quit"
         ]
     })
@@ -78,8 +79,12 @@ function start() {
     case "add employee":
       addEmployee();
       break;
-      
-      default:
+
+    case "update employee":
+      updateRole();
+      break;
+
+    default:
         console.log("Laters!");
         connection.end();
     }
@@ -88,6 +93,7 @@ function start() {
 }
 
 function viewDepartment() {
+    //potentially need to add lines 5-9 from joins.sql
     let query = "SELECT * FROM department";
     connection.query(query, function (error, response) {
         if (error) {
@@ -235,7 +241,7 @@ function updateRole() {
             return `${names.first_name} ${names.last_name}` 
         });
         
-        let query2 = "SELECT * FROM employee";
+        let query2 = "SELECT * FROM role";
         let currentRoles2 = [];
         connection.query(query2, function(error, response){
             if (error) throw error;
@@ -274,7 +280,7 @@ function updateRole() {
             };
 
             console.log(roleID2, id);
-            let query3 = "UPDATE employees SET role_id = ? WHERE id = ?"
+            let query3 = "UPDATE employee SET role_id = ? WHERE id = ?"
             connection.query(query3, [roleID2, id], function(error, response){
                 if(error) throw error;
                 console.log("The role has been updated.");
