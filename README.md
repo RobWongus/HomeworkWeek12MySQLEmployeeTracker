@@ -1,8 +1,4 @@
-
-  
-#undefined
-  
-# HomeworkWeek12MySQLEmployeeTracker
+# MySQLEmployeeTracker
 
 ## Table of Contents
 
